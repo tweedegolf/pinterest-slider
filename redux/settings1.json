@@ -1,0 +1,13 @@
+{
+  "markerSize": 39,
+  "feed": "data/mov/2016-01-20-204857.webm",
+  "model": "data/revo_002.dae.json",
+  "settings": {
+    "scale": 4,
+    "rotation": {
+      "x": "Math.PI / 2",
+      "y": "Math.PI",
+      "z": 0
+    }
+  }
+}

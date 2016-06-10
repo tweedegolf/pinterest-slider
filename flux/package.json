@@ -1,0 +1,36 @@
+{
+  "name": "pinterest-slider-redux",
+  "private": false,
+  "devDependencies": {
+    "babel-eslint": "*",
+    "babel-plugin-transform-class-properties": "*",
+    "babel-plugin-transform-decorators-legacy": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babel-preset-stage-0": "*",
+    "babelify": "*",
+    "browserify": "*",
+    "eslint": "*",
+    "eslint-plugin-react": "*",
+    "exorcist": "*",
+    "local-web-server": "*",
+    "uglify": "*",
+    "watchify": "*"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "*",
+    "react": "*",
+    "react-addons-css-transition-group": "*",
+    "react-dom": "*",
+    "flux": "*"
+  },
+  "scripts": {
+    "start": "ws",
+    "start-ssl": "ws --key ../localhost.key --cert ../localhost.crt",
+    "watch": "watchify js/index.js -t [ babelify --presets [ es2015 react stage-0 ] --plugins [ transform-class-properties transform-decorators-legacy ] ] -o build/app.js --debug --verbose",
+    "build": "browserify js/index.js -t [ babelify --presets [ es2015 react stage-0 ] --plugins [ transform-class-properties transform-decorators-legacy ] ] --debug | exorcist build/app.js.map | uglifyjs -c > build/app.js"
+  }
+}
