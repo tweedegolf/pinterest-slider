@@ -9,67 +9,64 @@ const labelStyle = {
 
 const rangeStyle = {
   verticalAlign: 'middle',
-  //marginBottom: '5px',
+  marginBottom: '5px',
   width: '200px'
 }
 
 /* React wrapper for input type Range */
 
-class Slider extends React.Component{
+const Slider = ({id, value, min, max, step = 1, label, classLabel, classRange, onMouseUp, onMouseDown, onChange}) => {
 
-  static displayName = 'Slider'
-
-  render(){
-    let value = this.props.value
-    function createLabel(props){
-      let label = value
-      if(props.label){
-        label = props.label + '<em>' + value + '</em>'
-      }
-      return {__html: label}
+  function createLabel(){
+    if(typeof label !== 'undefined'){
+      label = label + '<em>' + value + '</em>'
+    }else {
+      label = value
     }
-
-    let _labelStyle = labelStyle;
-    let _rangeStyle = rangeStyle;
-
-    if(typeof this.props.classLabel !== 'undefined'){
-      _labelStyle = {};
-    }
-    if(typeof this.props.classRange !== 'undefined'){
-      _rangeStyle = {};
-    }
-
-    return (
-      <div>
-        <label className={this.props.classLabel} htmlFor={this.props.id} style={_labelStyle} dangerouslySetInnerHTML={createLabel(this.props)} />
-        <input
-          className={this.props.classRange}
-          style={_rangeStyle}
-          onMouseUp={this.props.onMouseUp}
-          onMouseDown={this.props.onMouseDown}
-          id={this.props.id}
-          onChange={this.props.onChange}
-          type="range"
-          value={this.props.value}
-          min={this.props.min}
-          max={this.props.max}
-          step={this.props.step}
-        />
-      </div>
-    )
+    return {__html: label}
   }
+
+  let _labelStyle = labelStyle
+  let _rangeStyle = rangeStyle
+
+  if(typeof classLabel !== 'undefined'){
+    // if a css class name is provide, don't use the default styling
+    _labelStyle = {}
+  }
+  if(typeof classRange !== 'undefined'){
+    _rangeStyle = {}
+  }
+
+  return (
+    <div>
+      <label className={classLabel} htmlFor={id} style={_labelStyle} dangerouslySetInnerHTML={createLabel()} />
+      <input
+        className={classRange}
+        style={_rangeStyle}
+        onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
+        id={id}
+        onChange={onChange}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+      />
+    </div>
+  )
 }
 
 Slider.propTypes = {
+  classLabel: PropTypes.string,
+  classRange: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.string,
-  max: PropTypes.number,
-  min: PropTypes.number,
+  max: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   step: PropTypes.number,
   value: PropTypes.number.isRequired,
-  classLabel: PropTypes.string,
-  classRange: PropTypes.string
 }
 
 export default Slider

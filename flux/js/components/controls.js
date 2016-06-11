@@ -1,54 +1,48 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PropTypes} from 'react'
 import Range from './range_react'
 
-export default class Controls extends Component{
+const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval, getPins}) => {
 
-  static displayName = 'Controls'
+  let options = [<option value={'choose'} key={'choose'}>{'choose a board'}</option>]
 
-  constructor(props){
-    super(props);
-  }
+  boards.forEach(board => {
+    options.push(<option value={board.id} key={board.id}>{board.name}</option>)
+  })
 
-  render(){
+  return (
+    <div>
+      <select value={selectedBoard} onChange={selectBoard}>
+        {options}
+      </select>
 
-    let boards = this.props.boards
-    let options = [<option value={'choose'} key={'choose'}>{'choose a board'}</option>]
+      <Range
+        classLabel={'label-interval'}
+        classRange={'range-interval'}
+        label={'interval: '}
+        min={2000}
+        max={20000}
+        step={5}
+        value={interval}
+        onChange={selectInterval}
+      />
 
-    boards.forEach(board => {
-      options.push(<option value={board.id} key={board.id}>{board.name}</option>)
-    })
-
-    return (
-      <div>
-        <select value={this.props.selectedBoard} onChange={this.props.selectBoard}>
-          {options}
-        </select>
-
-        <Range
-          classLabel={'label-interval'}
-          classRange={'range-interval'}
-          label={'interval: '}
-          min={2000}
-          max={20000}
-          step={5}
-          value={this.props.interval}
-          onChange={this.props.selectInterval}
-        />
-
-        <button
-          disabled={this.props.selectedBoard === 'choose'}
-          onClick={this.props.getPins}
-        >
-          {'start'}
-        </button>
-      </div>
-    )
-  }
+      <button
+        disabled={selectedBoard === 'choose'}
+        onClick={getPins}
+      >
+        {'start'}
+      </button>
+    </div>
+  )
 }
 
 Controls.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object),
+  getPins: PropTypes.func.isRequired,
   interval: PropTypes.number.isRequired,
   selectBoard: PropTypes.func.isRequired,
-  selectedBoard: PropTypes.string.isRequired
+  selectedBoard: PropTypes.string.isRequired,
+  selectInterval: PropTypes.func.isRequired,
 }
+
+export default Controls

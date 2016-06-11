@@ -1,22 +1,16 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PropTypes} from 'react'
 
-export default class Authorize extends Component{
+const Authorize = ({onClick}) => {
 
-  static displayName = 'Authorize'
-
-  constructor(props){
-    super(props)
-  }
-
-  render(){
-    return (
-      <button onClick={this.props.onClick}>
-        {"authorize"}
-      </button>
-    )
-  }
+  return (
+    <button onClick={onClick}>
+      {"authorize"}
+    </button>
+  )
 }
 
 Authorize.propTypes = {
   onClick: PropTypes.func.isRequired
 }
+
+export default Authorize

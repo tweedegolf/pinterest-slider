@@ -1,32 +1,24 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PropTypes} from 'react'
 
-export default class SelectBoard extends Component{
+const SelectBoard = ({boards, onChange}) => {
 
-  static displayName = 'SelectBoard'
+  let options = [<option id={'choose'} key={'choose'}>{'choose a board'}</option>]
 
-  constructor(props){
-    super(props);
+  for(let id of Object.keys(boards)){
+    let b = boards[id]
+    options.push(<option id={id} key={id}>{b.name}</option>)
   }
 
-  render(){
-    let boards = this.props.boards;
-    let options = [<option id={'choose'} key={'choose'}>{'choose a board'}</option>]
-
-    for(let id of Object.keys(boards)){
-      let b = boards[id]
-      options.push(<option id={id} key={id}>{b.name}</option>)
-    }
-
-    return (
-      <select onChange={this.props.onChange}>
-        {options}
-      </select>
-    )
-  }
+  return (
+    <select onChange={onChange}>
+      {options}
+    </select>
+  )
 }
-
 
 SelectBoard.propTypes = {
+  boards: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  boards: PropTypes.object.isRequired
 }
+
+export default SelectBoard

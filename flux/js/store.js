@@ -46,27 +46,6 @@ function _receivePins(json){
 }
 
 
-function checkSession(){
-  let accessToken = pdk.accessToken
-  if(accessToken !== ''){
-    getBoards.call(this)
-  }else{
-    login.call(this)
-  }
-}
-
-
-function login(){
-  state = {...state, displayState: 'loading'}
-  this.emitChange()
-
-  pdk.login()
-  .then(() => {
-    getBoards.call(this)
-  })
-}
-
-
 function getBoards(){
   state = {...state, displayState: 'loading'}
   this.emitChange()
@@ -87,6 +66,25 @@ function getPins() {
     state = _receivePins(json)
     this.emitChange()
   })
+}
+
+
+function login(){
+  state = {...state, displayState: 'login'}
+  this.emitChange()
+
+  pdk.login()
+  .then(() => {
+    getBoards.call(this)
+  })
+}
+
+
+function checkSession(){
+  let accessToken = pdk.accessToken
+  if(accessToken !== ''){
+    getBoards.call(this)
+  }
 }
 
 
