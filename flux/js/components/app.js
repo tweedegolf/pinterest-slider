@@ -5,6 +5,8 @@ import Controls from './controls'
 import ImageSlider from './image_slider'
 import Store from '../store'
 
+// only component with state
+
 export default class App extends Component{
 
   static displayName = 'App'
@@ -32,27 +34,19 @@ export default class App extends Component{
   render(){
     switch(this.state.displayState){
       case 'authorize':
-        return <Authorize/>
+        return <Authorize onClick={Actions.login}/>
+
       case 'configure':
-        return <Controls boards={this.state.boards} interval={this.state.interval} onSelect={Actions.selectBoard}/>
+        return <Controls {...this.state} selectBoard={Actions.selectBoard} selectInterval={Actions.selectInterval} getPins={Actions.getPins}/>
+
       case 'run':
-        return <ImageSlider/>
+        return <ImageSlider {...this.state} nextImage={Actions.nextImage} onClick={Actions.onImageClick}/>
+
       case 'loading':
-        return <div className={'loading'}>{'loading'}</div>;
+        return <div className={'loading'}>{'loading'}</div>
+
       default:
         return false
     }
-    // return (
-    //   <div>
-    //     <Authorize displayState={this.props.displayState}/>
-    //     <Controls displayState={this.props.displayState}/>
-    //     <ImageSlider displayState={this.props.displayState}/>
-    //   </div>
-    // )
   }
-}
-
-App.propTypes = {
-  dispatch: PropTypes.func, // .isRequired yields a warning because decorators aren't yet fully supported
-  displayState: PropTypes.string
 }

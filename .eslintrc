@@ -11,11 +11,12 @@
   "globals": {
   },
   "plugins": [
-   "react"
+    "babel",
+    "react"
   ],
   "rules": {
     // Possible Errors
-    "comma-dangle": [2, "never"],
+    "comma-dangle": 0,
     "no-cond-assign": 2,
     "no-console": 0,
     "no-constant-condition": 2,
@@ -102,7 +103,7 @@
     "no-undef-init": 2,
     "no-undefined": 2,
     "no-unused-vars": 1,
-    "no-use-before-define": 2,
+    "no-use-before-define": 1,
     // Stylistic Issues
     "indent": [2, 2, {
      "SwitchCase": 1
@@ -172,7 +173,8 @@
     "react/jsx-no-duplicate-props": 1,
     "react/jsx-no-literals": 1,
     "react/jsx-no-undef": 1,
-    "react/jsx-quotes": 1,
+    "react/jsx-quotes": 0,
+    "jsx-quotes": [2, "prefer-double"],
     "react/jsx-sort-prop-types": 1,
     "react/jsx-sort-props": 1,
     "react/jsx-uses-react": 1,
@@ -190,6 +192,14 @@
     "react/require-extension": 1,
     "react/self-closing-comp": 1,
     "react/sort-comp": 1,
-    "react/wrap-multilines": 1
-  }
+    "react/wrap-multilines": 1,
+    "babel/generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "babel/array-bracket-spacing": 1,
+    "babel/object-curly-spacing": 1,
+    "babel/object-shorthand": 1,
+    "babel/arrow-parens": 1,
+    "babel/no-await-in-loop": 1,
+    "babel/flow-object-type": 1
+    }
 }

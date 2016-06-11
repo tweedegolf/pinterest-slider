@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {nextImage} from '../actions'
-import Image from '../components/image'
+import Image from './image'
 
 export default class ImageSlider extends Component{
 
@@ -12,7 +11,7 @@ export default class ImageSlider extends Component{
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      this.props.dispatch(nextImage(this.props.index))
+      this.props.nextImage(this.props.index)
     }, this.props.interval)
   }
 
@@ -26,17 +25,16 @@ export default class ImageSlider extends Component{
       <Image
         url={image.url}
         index={this.props.index}
-        onClick={() => this.props.onClick(this.props.pins[this.props.index].url)}
+        onClick={this.props.onClick}
       />
     )
   }
 }
 
-// .isRequired yields a warning because decorators aren't yet fully supported
 ImageSlider.propTypes = {
-  dispatch: PropTypes.func,
-  images: PropTypes.arrayOf(PropTypes.object),
-  index: PropTypes.number,
-  interval: PropTypes.number,
-  onClick: PropTypes.func
+  nextImage: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+  images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  index: PropTypes.number.isRequired,
+  interval: PropTypes.number.isRequired,
 }

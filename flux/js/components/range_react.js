@@ -50,7 +50,7 @@ class Slider extends React.Component{
           id={this.props.id}
           onChange={this.props.onChange}
           type="range"
-          value={value}
+          value={this.props.value}
           min={this.props.min}
           max={this.props.max}
           step={this.props.step}
@@ -67,7 +67,7 @@ Slider.propTypes = {
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   step: PropTypes.number,
-  value: PropTypes.number,
+  value: PropTypes.number.isRequired,
   classLabel: PropTypes.string,
   classRange: PropTypes.string
 }

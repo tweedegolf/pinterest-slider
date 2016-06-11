@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react'
-import Actions from '../actions'
 
 export default class Authorize extends Component{
 
@@ -11,7 +10,7 @@ export default class Authorize extends Component{
 
   render(){
     return (
-      <button onClick={Actions.login}>
+      <button onClick={this.props.onClick}>
         {"authorize"}
       </button>
     )
@@ -19,5 +18,5 @@ export default class Authorize extends Component{
 }
 
 Authorize.propTypes = {
-  dispatch: PropTypes.func // .isRequired yields a warning because decorators aren't yet fully supported
+  onClick: PropTypes.func.isRequired
 }

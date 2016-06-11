@@ -1,17 +1,19 @@
 import EventEmitter from 'events'
+import pdk from './pdk_wrapper'
 import * as ActionTypes from './constants'
 import AppDispatcher from './app_dispatcher'
-import * as Actions from './actions'
-import pdk from './pdk_wrapper'
 
 const CHANGE_EVENT = 'change'
 
 let state = {
   displayState: 'authorize',
-  interval: 6000
+  interval: 6000,
+  index: 0,
+  selectedBoard: 'choose',
 }
 
 let s = 0
+let numImages = 0
 
 
 function _receiveBoards(json){
@@ -24,6 +26,7 @@ function _receiveBoards(json){
   return {...state, boards, displayState: 'configure'}
 }
 
+
 function _receivePins(json){
   let pins = []
   let images = []
@@ -33,24 +36,23 @@ function _receivePins(json){
     images.push(p.image.original)
   })
 
-  state = {...state,
-    type: Actions.RECEIVE_PINS,
-    displayState: 'run',
+  numImages = json.length
+
+  return {...state,
     pins,
     images,
-    numImages: images.length
+    displayState: 'run',
   }
 }
 
 
-function getBoards(){
-  state = {...state, displayState: 'loading'}
-  this.emitChange()
-  pdk.getBoards()
-  .then(e => {
-    state = _receiveBoards(e)
-    this.emitChange()
-  })
+function checkSession(){
+  let accessToken = pdk.accessToken
+  if(accessToken !== ''){
+    getBoards.call(this)
+  }else{
+    login.call(this)
+  }
 }
 
 
@@ -60,57 +62,44 @@ function login(){
 
   pdk.login()
   .then(() => {
-    pdk.getBoards()
-    .then(e => {
-      state = _receiveBoards(e)
-      this.emitChange()
-    })
+    getBoards.call(this)
   })
 }
 
-function getPins(boardId) {
-  return dispatch => {
-    dispatch({
-      type: Actions.GET_PINS,
-      displayState: 'loading'
-    })
-    return pdk.getPins(boardId)
-      .then(e => dispatch(_receivePins(e)))
-  }
+
+function getBoards(){
+  state = {...state, displayState: 'loading'}
+  this.emitChange()
+  pdk.getBoards()
+  .then(json => {
+    state = _receiveBoards(json)
+    this.emitChange()
+  })
 }
 
 
-function nextImage(oldIndex){
-  return (dispatch, getState) => {
-    let index = oldIndex + 1
-    let max = getState().data.numImages
-    if(index === max){
-      index = 0
-    }
-    dispatch({
-      type: Actions.NEXT_IMAGE,
-      index
-    })
-  }
+function getPins() {
+  state = {...state, displayState: 'loading'}
+  this.emitChange()
+
+  pdk.getPins(state.selectedBoard)
+  .then(json => {
+    state = _receivePins(json)
+    this.emitChange()
+  })
 }
 
-function selectInterval(interval){
-  return (dispatch) => {
-    dispatch({
-      type: Actions.SELECT_INTERVAL,
-      interval
-    })
+
+function nextImage(){
+  let index = state.index
+  index++
+  if(index === numImages){
+    index = 0
   }
+  state = {...state, index}
+  this.emitChange()
 }
 
-function selectBoard(board){
-  return (dispatch) => {
-    dispatch({
-      type: Actions.SELECT_BOARD,
-      board
-    })
-  }
-}
 
 class Store extends EventEmitter {
 
@@ -141,28 +130,41 @@ class Store extends EventEmitter {
 
 
   handle(action) {
-
     console.log('action:', action)
 
     switch(action.type) {
 
       case ActionTypes.CHECK_SESSION:
-        let accessToken = pdk.accessToken
-        if(accessToken !== ''){
-          getBoards.call(this)
-        }else{
-          login.call(this)
-        }
-        break;
+        checkSession.call(this)
+        break
 
       case ActionTypes.LOGIN:
-        //this.emitChange()
-        break;
-
+        login.call(this)
+        break
 
       case ActionTypes.SELECT_BOARD:
-        getPins.call(this, action.payload.boardId)
-        break;
+        state = {...state, selectedBoard: action.payload.boardId}
+        this.emitChange()
+        break
+
+      case ActionTypes.SELECT_INTERVAL:
+        state = {...state, interval: action.payload.interval}
+        this.emitChange()
+        break
+
+      case ActionTypes.GET_PINS:
+        getPins.call(this)
+        break
+
+      case ActionTypes.NEXT_IMAGE:
+        nextImage.call(this)
+        break
+
+      case ActionTypes.ON_IMAGE_CLICK:
+        action.payload.event.preventDefault()
+        let url = state.pins[state.index].url
+        window.open(url, '_blank')
+        break
 
       default:
       // do nothing

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group')
 
-const Image = ({url, index, width, height, onClick }) => {
+const Image = ({url, index, width, height, onClick}) => {
   return (
     <ReactCSSTransitionGroup
       transitionName={'image'}
@@ -13,10 +13,7 @@ const Image = ({url, index, width, height, onClick }) => {
       <img
         src={url}
         key={'image_' + index}
-        onClick={e => {
-          e.preventDefault()
-          onClick()
-        }}
+        onClick={onClick}
       />
     </ReactCSSTransitionGroup>
   )

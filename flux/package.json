@@ -11,6 +11,7 @@
     "babelify": "*",
     "browserify": "*",
     "eslint": "*",
+    "eslint-plugin-babel": "3.2.0",
     "eslint-plugin-react": "*",
     "exorcist": "*",
     "local-web-server": "*",

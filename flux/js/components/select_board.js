@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react'
-import {getPins} from '../actions'
 
 export default class SelectBoard extends Component{
 
@@ -12,6 +11,7 @@ export default class SelectBoard extends Component{
   render(){
     let boards = this.props.boards;
     let options = [<option id={'choose'} key={'choose'}>{'choose a board'}</option>]
+
     for(let id of Object.keys(boards)){
       let b = boards[id]
       options.push(<option id={id} key={id}>{b.name}</option>)
@@ -26,8 +26,7 @@ export default class SelectBoard extends Component{
 }
 
 
-// .isRequired yields a warning because decorators aren't yet fully supported
 SelectBoard.propTypes = {
-  onChange: PropTypes.func,
-  boards: PropTypes.object
+  onChange: PropTypes.func.isRequired,
+  boards: PropTypes.object.isRequired
 }
