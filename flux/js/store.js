@@ -1,22 +1,12 @@
-import EventEmitter from 'events'
+import {ReduceStore} from 'flux/utils'
 import pdk from './pdk_wrapper'
 import * as ActionTypes from './constants'
 import AppDispatcher from './app_dispatcher'
 
-const CHANGE_EVENT = 'change'
-
-let state = {
-  displayState: 'authorize',
-  interval: 6000,
-  index: 0,
-  selectedBoard: 'choose',
-}
-
-let s = 0
 let numImages = 0
 
 
-function _receiveBoards(json){
+function _receiveBoards(json, state){
   let boards = []
 
   json.map(function(b){
@@ -27,7 +17,7 @@ function _receiveBoards(json){
 }
 
 
-function _receivePins(json){
+function _receivePins(json, state){
   let pins = []
   let images = []
 
@@ -46,32 +36,33 @@ function _receivePins(json){
 }
 
 
-function getBoards(){
-  state = {...state, displayState: 'loading'}
-  this.emitChange()
+function getBoards(state){
   pdk.getBoards()
   .then(json => {
-    state = _receiveBoards(json)
-    this.emitChange()
+
+    let boards = []
+
+    json.map(function(b){
+      boards.push(b)
+    })
+
+    return _receiveBoards(json, state)
   })
 }
 
 
 function getPins() {
   state = {...state, displayState: 'loading'}
-  this.emitChange()
 
   pdk.getPins(state.selectedBoard)
   .then(json => {
     state = _receivePins(json)
-    this.emitChange()
   })
 }
 
 
 function login(){
   state = {...state, displayState: 'login'}
-  this.emitChange()
 
   pdk.login()
   .then(() => {
@@ -80,10 +71,12 @@ function login(){
 }
 
 
-function checkSession(){
+function checkSession(state){
   let accessToken = pdk.accessToken
   if(accessToken !== ''){
-    getBoards.call(this)
+    return getBoards.call(this, state)
+  }else {
+    return null
   }
 }
 
@@ -95,59 +88,44 @@ function nextImage(){
     index = 0
   }
   state = {...state, index}
-  this.emitChange()
 }
 
 
-class Store extends EventEmitter {
+class Store extends ReduceStore {
 
-  constructor () {
-    super()
-
-    AppDispatcher.register((action) => {
-      this.handle(action)
-    })
-  }
-
-  emitChange() {
-    this.emit(CHANGE_EVENT)
-  }
-
-  addChangeListener(callback) {
-    this.on(CHANGE_EVENT, callback)
-  }
-
-  removeChangeListener(callback) {
-    this.removeListener(CHANGE_EVENT, callback)
-  }
-
-  getState() {
-    console.log(s++, state)
-    return {...state}
+  getInitialState(){
+    return {
+      displayState: 'authorize',
+      interval: 6000,
+      index: 0,
+      selectedBoard: 'choose',
+    }
   }
 
 
-  handle(action) {
-    console.log('action:', action)
+  reduce(state, action) {
+    console.log('action:', action, state)
 
     switch(action.type) {
 
       case ActionTypes.CHECK_SESSION:
-        checkSession.call(this)
-        break
+        //return null
+        return checkSession.call(this, state)
 
       case ActionTypes.LOGIN:
+        state = {...state, displayState: 'loading'}
+        this.__emitChange()
         login.call(this)
         break
 
       case ActionTypes.SELECT_BOARD:
         state = {...state, selectedBoard: action.payload.boardId}
-        this.emitChange()
+
         break
 
       case ActionTypes.SELECT_INTERVAL:
         state = {...state, interval: action.payload.interval}
-        this.emitChange()
+
         break
 
       case ActionTypes.GET_PINS:
@@ -165,9 +143,9 @@ class Store extends EventEmitter {
         break
 
       default:
-      // do nothing
+        return null
     }
   }
 }
 
-export default new Store()
+export default new Store(AppDispatcher)

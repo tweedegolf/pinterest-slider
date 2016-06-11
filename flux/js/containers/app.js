@@ -18,12 +18,12 @@ export default class App extends Component{
   }
 
   componentDidMount() {
-    Store.addChangeListener(this._onChangeListener)
+    this._storeListener = Store.addListener(this._onChangeListener)
     Actions.checkSession()
   }
 
   componentWillUnmount() {
-    Store.removeChangeListener(this._onChangeListener)
+    this._storeListener.remove()
   }
 
   _onChange(){
