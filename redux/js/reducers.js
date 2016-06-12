@@ -36,7 +36,12 @@ function rootReducer(state = initialState, action){
       return {...state, displayState: DisplayStates.RUN, images: action.payload.images}
 
     case actions.NEXT_IMAGE:
-      return {...state, index: action.index}
+      let index = state.index + 1
+      let maxIndex = state.images.length
+      if(index === maxIndex){
+        index = 0
+      }
+      return {...state, index: index}
 
     default:
       return state
