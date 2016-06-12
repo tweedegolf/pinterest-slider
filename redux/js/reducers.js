@@ -1,72 +1,59 @@
-import {combineReducers, applyMiddleware, createStore} from 'redux'
+import {applyMiddleware, createStore} from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import * as actions from './constants/action_types'
+import * as DisplayStates from './constants/display_states'
+
+let store = null
+
+let initialState = {
+  displayState: DisplayStates.Authorize,
+  message: '...',
+  boards: [],
+  images: [],
+  index: 0,
+  interval: 6000,
+  selectedBoard: 'choose',
+}
 
 
-function session(state = {}, action){
+function rootReducer(state = initialState, action){
+
   switch (action.type) {
     case actions.CHECK_SESSION:
-      return {...state, displayState: action.payload.session}
-    case actions.LOGIN:
-    case actions.LOGGED_IN:
-    case actions.GET_BOARDS:
-      return {...state, displayState: 'configure'}
-    case actions.RECEIVE_BOARDS:
-    case actions.GET_PINS:
-    case actions.RECEIVE_PINS:
-    default:
-      return state
-  }
-}
-
-function data(state = {boards: [], images: []}, action) {
-  switch(action.type){
+      return {...state, displayState: DisplayStates.MESSAGE, message: 'check session'}
 
     case actions.GET_BOARDS:
-      return {...state, boards: action.payload.boards}
+      return {...state, displayState: DisplayStates.CONFIGURE, boards: action.payload.boards}
+
+    case actions.SELECT_INTERVAL:
+      return {...state, interval: action.interval}
 
     case actions.SELECT_BOARD:
-      return Object.assign({}, state, {
-        selectedBoard: action.payload.boardId
-      })
-    case actions.RECEIVE_PINS:
-      return Object.assign({}, state, {
-        pins: action.pins,
-        images: action.images,
-        numImages: action.numImages
-      })
-    default:
-      return state
-  }
-}
+      return {...state, selectedBoard: action.payload.boardId}
 
-function slider(state = {index: 0, interval: 6000}, action){
-  switch(action.type){
+    case actions.GET_PINS:
+      return {...state, displayState: DisplayStates.RUN, images: action.payload.images}
+
     case actions.NEXT_IMAGE:
-      return Object.assign({}, state, {index: action.index})
-    case actions.SELECT_INTERVAL:
-      return Object.assign({}, state, {interval: action.interval})
+      return {...state, index: action.index}
+
     default:
       return state
   }
 }
 
-const rootReducer = combineReducers({
-  session,
-  data,
-  slider
-})
 
-const loggerMiddleware = createLogger()
-
-export default function getStore(initialState) {
-  return createStore(
-    rootReducer,
-    initialState,
-    applyMiddleware(
-      thunkMiddleware,
-      loggerMiddleware
+export default function getStore() {
+  if(store === null){
+    store = createStore(
+      rootReducer,
+      initialState,
+      applyMiddleware(
+        thunkMiddleware,
+        createLogger()
+      )
     )
-  )
+  }
+  return store
 }

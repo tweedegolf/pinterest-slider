@@ -31,56 +31,66 @@ export default {
 
 
   login(){
-    AppDispatcher.dispatch({
-      type: ActionTypes.LOGIN
-    })
-
-    PinterestAPI.login()
-    .then(boards => {
-      AppDispatcher.dispatch({
-        type: ActionTypes.GET_BOARDS,
-        payload: {boards}
+    return function(dispatch){
+      dispatch({
+        type: ActionTypes.LOGIN
       })
-    })
+
+      PinterestAPI.login()
+      .then(boards => {
+        dispatch({
+          type: ActionTypes.GET_BOARDS,
+          payload: {boards}
+        })
+      })
+    }
   },
 
 
   selectBoard(e){
-    let boardId = e.target.options[e.target.selectedIndex].value
-    AppDispatcher.dispatch({
-      type: ActionTypes.SELECT_BOARD,
-      payload: {boardId}
-    })
+    return function(dispatch){
+      let boardId = e.target.options[e.target.selectedIndex].value
+      dispatch({
+        type: ActionTypes.SELECT_BOARD,
+        payload: {boardId}
+      })
+    }
   },
 
 
   selectInterval(e){
-    AppDispatcher.dispatch({
-      type: ActionTypes.SELECT_INTERVAL,
-      payload: {
-        interval: e.target.valueAsNumber
-      }
-    })
+    return function(dispatch){
+      dispatch({
+        type: ActionTypes.SELECT_INTERVAL,
+        payload: {
+          interval: e.target.valueAsNumber
+        }
+      })
+    }
   },
 
 
   start(boardId){
-    AppDispatcher.dispatch({
-      type: ActionTypes.START,
-    })
-    PinterestAPI.getPins(boardId)
-    .then(data => {
-      AppDispatcher.dispatch({
-        type: ActionTypes.GET_PINS,
-        payload: data
+    return function(dispatch){
+      dispatch({
+        type: ActionTypes.START,
       })
-    })
+      PinterestAPI.getPins(boardId)
+      .then(data => {
+        dispatch({
+          type: ActionTypes.GET_PINS,
+          payload: data
+        })
+      })
+    }
   },
 
 
   nextImage(){
-    AppDispatcher.dispatch({
-      type: ActionTypes.NEXT_IMAGE
-    })
+    return function(dispatch){
+      dispatch({
+        type: ActionTypes.NEXT_IMAGE
+      })
+    }
   },
 }

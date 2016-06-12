@@ -8,9 +8,12 @@ class Store extends ReduceStore {
 
   getInitialState(){
     return {
-      displayState: DisplayStates.AUTHORIZE,
-      interval: 6000,
+      displayState: DisplayStates.Authorize,
+      message: '...',
+      boards: [],
+      images: [],
       index: 0,
+      interval: 6000,
       selectedBoard: 'choose',
     }
   }
