@@ -1,5 +1,6 @@
 import AppDispatcher from './app_dispatcher'
 import * as ActionTypes from './constants'
+import * as PinterestAPI from './pinterest/api'
 
 export default {
 
@@ -7,12 +8,14 @@ export default {
     AppDispatcher.dispatch({
       type: ActionTypes.CHECK_SESSION
     })
+    PinterestAPI.checkSession()
   },
 
   login(){
     AppDispatcher.dispatch({
       type: ActionTypes.LOGIN
     })
+    PinterestAPI.login()
   },
 
   selectBoard(e){
@@ -21,6 +24,7 @@ export default {
       type: ActionTypes.SELECT_BOARD,
       payload: {boardId}
     })
+    //PinterestAPI.getPins(boardId)
   },
 
   selectInterval(e){
@@ -32,15 +36,23 @@ export default {
     })
   },
 
-  getPins(){
-    AppDispatcher.dispatch({
-      type: ActionTypes.GET_PINS,
-    })
-  },
-
   nextImage(){
     AppDispatcher.dispatch({
       type: ActionTypes.NEXT_IMAGE
+    })
+  },
+
+  getBoards(boards){
+    AppDispatcher.dispatch({
+      type: ActionTypes.GET_BOARDS,
+      payload: {boards}
+    })
+  },
+
+  getPins(data){
+    AppDispatcher.dispatch({
+      type: ActionTypes.GET_BOARDS,
+      payload: data
     })
   },
 

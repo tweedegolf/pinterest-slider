@@ -6,12 +6,12 @@ const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval,
   let options = [<option value={'choose'} key={'choose'}>{'choose a board'}</option>]
 
   boards.forEach(board => {
-    options.push(<option value={board.id} key={board.id}>{board.name}</option>)
+    options.push(<option value={board.id} key={board.id} disabled={board.id === selectedBoard}>{board.name}</option>)
   })
 
   return (
     <div>
-      <select value={selectedBoard} onChange={selectBoard}>
+      <select onChange={selectBoard} value={selectedBoard}>
         {options}
       </select>
 
@@ -35,6 +35,7 @@ const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval,
     </div>
   )
 }
+
 
 Controls.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object),

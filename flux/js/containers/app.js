@@ -28,7 +28,7 @@ export default class App extends Component{
 
   _onChange(){
     let state = Store.getState()
-    console.log(state)
+    //console.log(state)
     this.setState(state)
   }
 
