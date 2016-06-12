@@ -38,13 +38,9 @@ export function getPins(boardId) {
 
 
 export function login(){
-  return new Promise((resolve, reject) => {
-    Promise.all([pdk.login(), pdk.boards()])
-    .then(data => {
-      console.log(data)
-      resolve(data[0])
-    })
-  })
+  return Promise.resolve()
+  .then(pdk.login)
+  .then(pdk.getBoards)
 }
 
 
