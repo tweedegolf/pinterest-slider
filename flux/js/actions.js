@@ -1,14 +1,18 @@
 import AppDispatcher from './app_dispatcher'
-import * as ActionTypes from './constants'
 import * as PinterestAPI from './pinterest/api'
+import * as ActionTypes from './constants/action_types'
 
 export default {
 
   checkSession(){
+    let session = PinterestAPI.checkSession()
     AppDispatcher.dispatch({
-      type: ActionTypes.CHECK_SESSION
+      type: ActionTypes.CHECK_SESSION,
+      payload: {session}
     })
-    PinterestAPI.checkSession()
+    if(session){
+      PinterestAPI.getBoards()
+    }
   },
 
   login(){
@@ -24,7 +28,6 @@ export default {
       type: ActionTypes.SELECT_BOARD,
       payload: {boardId}
     })
-    //PinterestAPI.getPins(boardId)
   },
 
   selectInterval(e){
@@ -34,6 +37,13 @@ export default {
         interval: e.target.valueAsNumber
       }
     })
+  },
+
+  start(boardId){
+    AppDispatcher.dispatch({
+      type: ActionTypes.START,
+    })
+    PinterestAPI.getPins(boardId)
   },
 
   nextImage(){
@@ -51,17 +61,8 @@ export default {
 
   getPins(data){
     AppDispatcher.dispatch({
-      type: ActionTypes.GET_BOARDS,
+      type: ActionTypes.GET_PINS,
       payload: data
-    })
-  },
-
-  onImageClick(event){
-    AppDispatcher.dispatch({
-      type: ActionTypes.ON_IMAGE_CLICK,
-      payload: {
-        event
-      }
     })
   },
 }

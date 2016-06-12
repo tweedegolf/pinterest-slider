@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import Range from './range_react'
 
-const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval, getPins}) => {
+const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval, start}) => {
 
   let options = [<option value={'choose'} key={'choose'}>{'choose a board'}</option>]
 
@@ -28,7 +28,9 @@ const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval,
 
       <button
         disabled={selectedBoard === 'choose'}
-        onClick={getPins}
+        onClick={function(){
+          start(selectedBoard)
+        }}
       >
         {'start'}
       </button>
@@ -39,7 +41,7 @@ const Controls = ({boards, selectedBoard, selectBoard, interval, selectInterval,
 
 Controls.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object),
-  getPins: PropTypes.func.isRequired,
+  start: PropTypes.func.isRequired,
   interval: PropTypes.number.isRequired,
   selectBoard: PropTypes.func.isRequired,
   selectedBoard: PropTypes.string.isRequired,

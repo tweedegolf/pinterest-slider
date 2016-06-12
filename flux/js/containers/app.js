@@ -4,6 +4,7 @@ import Authorize from '../components/authorize'
 import Controls from '../components/controls'
 import ImageSlider from '../components/image_slider'
 import Store from '../store'
+import * as DisplayStates from '../constants/display_states'
 
 // only component with state
 
@@ -34,20 +35,18 @@ export default class App extends Component{
 
   render(){
     switch(this.state.displayState){
-      case 'authorize':
+
+      case DisplayStates.AUTHORIZE:
         return <Authorize onClick={Actions.login}/>
 
-      case 'configure':
-        return <Controls {...this.state} selectBoard={Actions.selectBoard} selectInterval={Actions.selectInterval} getPins={Actions.getPins}/>
+      case DisplayStates.CONFIGURE:
+        return <Controls {...this.state} selectBoard={Actions.selectBoard} selectInterval={Actions.selectInterval} start={Actions.start}/>
 
-      case 'run':
-        return <ImageSlider {...this.state} nextImage={Actions.nextImage} onClick={Actions.onImageClick}/>
+      case DisplayStates.RUN:
+        return <ImageSlider {...this.state} nextImage={Actions.nextImage} />
 
-      case 'loading':
-        return <div className={'loading'}>{'loading...'}</div>
-
-      case 'login':
-        return <div className={'loading'}>{'logging in...'}</div>
+      case DisplayStates.MESSAGE:
+        return <div className={'message'}>{this.state.message}</div>
 
       default:
         return false

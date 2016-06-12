@@ -25,7 +25,6 @@ export default class ImageSlider extends Component{
       <Image
         url={image.url}
         index={this.props.index}
-        onClick={this.props.onClick}
       />
     )
   }
@@ -33,7 +32,6 @@ export default class ImageSlider extends Component{
 
 ImageSlider.propTypes = {
   nextImage: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   index: PropTypes.number.isRequired,
   interval: PropTypes.number.isRequired,

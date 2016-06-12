@@ -47,10 +47,5 @@ export function login(){
 
 
 export function checkSession(){
-  let accessToken = pdk.accessToken
-  if(accessToken !== ''){
-    getBoards()
-  }else {
-    login()
-  }
+  return pdk.accessToken !== ''
 }

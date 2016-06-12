@@ -1,12 +1,14 @@
 import {ReduceStore} from 'flux/utils'
-import * as ActionTypes from './constants'
 import AppDispatcher from './app_dispatcher'
+import * as ActionTypes from './constants/action_types'
+import * as DisplayStates from './constants/display_states'
+
 
 class Store extends ReduceStore {
 
   getInitialState(){
     return {
-      displayState: 'authorize',
+      displayState: DisplayStates.AUTHORIZE,
       interval: 6000,
       index: 0,
       selectedBoard: 'choose',
@@ -19,12 +21,17 @@ class Store extends ReduceStore {
     switch(action.type) {
 
       case ActionTypes.CHECK_SESSION:
-        state = {...state, displayState: 'loading'}
+        if(action.payload.session === true){
+          state = {...state, displayState: DisplayStates.MESSAGE, message: 'checking session'}
+        }else{
+          state = {...state, displayState: DisplayStates.AUTHORIZE}
+        }
         return state
 
       case ActionTypes.LOGIN:
-        state = {...state, displayState: 'loading'}
+        state = {...state, displayState: DisplayStates.MESSAGE, message: 'logging in'}
         return state
+
 
       // actions originating from user interaction
       case ActionTypes.SELECT_BOARD:
@@ -35,6 +42,12 @@ class Store extends ReduceStore {
         state = {...state, interval: action.payload.interval}
         return state
 
+      case ActionTypes.START:
+        state = {...state, displayState: DisplayStates.MESSAGE, message: 'loading images'}
+        return state
+
+
+      // actions originating from setInterval
       case ActionTypes.NEXT_IMAGE:
         let index = state.index
         let numImages = state.images.length
@@ -45,24 +58,18 @@ class Store extends ReduceStore {
         state = {...state, index}
         return state
 
-      case ActionTypes.ON_IMAGE_CLICK:
-        action.payload.event.preventDefault()
-        let url = state.pins[state.index].url
-        window.open(url, '_blank')
-        return null
 
       // actions originating from Pinterest API
       case ActionTypes.GET_BOARDS:
-        state = {...state, boards: action.payload.boards, displayState: 'configure'}
+        state = {...state, boards: action.payload.boards, displayState: DisplayStates.CONFIGURE}
         return state
 
       case ActionTypes.GET_PINS:
-        state = {...state, pins: action.payload.pins, images: action.payload.images, displayState: 'configure'}
-        console.log(state)
+        state = {...state, pins: action.payload.pins, images: action.payload.images, displayState: DisplayStates.RUN}
         return state
 
       default:
-        return null
+        return state
     }
   }
 }
