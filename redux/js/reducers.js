@@ -1,22 +1,20 @@
 import {combineReducers, applyMiddleware, createStore} from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
-import * as actions from './constants'
+import * as actions from './constants/action_types'
 
 
 function session(state = {}, action){
-  let displayState = action.displayState
   switch (action.type) {
     case actions.CHECK_SESSION:
+      return {...state, displayState: action.payload.session}
     case actions.LOGIN:
     case actions.LOGGED_IN:
     case actions.GET_BOARDS:
+      return {...state, displayState: 'configure'}
     case actions.RECEIVE_BOARDS:
     case actions.GET_PINS:
     case actions.RECEIVE_PINS:
-      return Object.assign({}, state, {
-        displayState
-      })
     default:
       return state
   }
@@ -24,13 +22,13 @@ function session(state = {}, action){
 
 function data(state = {boards: [], images: []}, action) {
   switch(action.type){
-    case actions.RECEIVE_BOARDS:
-      return Object.assign({}, state, {
-        boards: action.boards
-      })
+
+    case actions.GET_BOARDS:
+      return {...state, boards: action.payload.boards}
+
     case actions.SELECT_BOARD:
       return Object.assign({}, state, {
-        selectedBoard: action.board
+        selectedBoard: action.payload.boardId
       })
     case actions.RECEIVE_PINS:
       return Object.assign({}, state, {

@@ -65,7 +65,7 @@ class Store extends ReduceStore {
         return state
 
       case ActionTypes.GET_PINS:
-        state = {...state, pins: action.payload.pins, images: action.payload.images, displayState: DisplayStates.RUN}
+        state = {...state, images: action.payload.images, displayState: DisplayStates.RUN}
         return state
 
       default:

@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Provider} from 'react-redux'
 import App from './containers/app'
+import {Provider} from 'react-redux'
 import getStore from './reducers'
+
 
 document.addEventListener('DOMContentLoaded', function(){
 
@@ -10,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
   ReactDOM.render(
     <Provider store={store}>
-       <App />
-     </Provider>,
+      <App />
+    </Provider>,
     document.getElementById('app')
   )
 })

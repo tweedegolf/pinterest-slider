@@ -25,10 +25,6 @@ export default class ImageSlider extends Component{
       <Image
         url={image.url}
         index={this.props.index}
-        onClick={function(e){
-          e.preventDefault()
-          window.open(image.pinUrl, '_blank')
-        }}
       />
     )
   }

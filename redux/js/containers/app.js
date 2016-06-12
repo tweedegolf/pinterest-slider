@@ -1,16 +1,25 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import Actions from '../actions'
+import Authorize from '../components/authorize'
+import Controls from '../components/controls'
+import ImageSlider from '../components/image_slider'
+import * as DisplayStates from '../constants/display_states'
 import {connect} from 'react-redux'
-import {checkSession} from '../actions'
-import Authorize from './authorize'
-import Controls from './controls'
-import ImageSlider from './image_slider'
 
+// only component with state
 
 const mapStateToProps = (state) => {
-  const {session} = state
-  let {displayState = ''} = session
+  const {session, data, slider} = state
+  let {displayState} = session
+  let {boards, images, selectedBoard} = data
+  let {interval, index} = slider
   return {
-    displayState
+    displayState,
+    boards,
+    images,
+    selectedBoard,
+    interval,
+    index,
   }
 }
 
@@ -25,38 +34,31 @@ export default class App extends Component{
 
   static displayName = 'App'
 
-  constructor(props){
-    super(props)
+  constructor(){
+    super()
   }
 
   componentDidMount() {
-    this.props.dispatch(checkSession())
+    this.props.dispatch(Actions.checkSession())
   }
 
   render(){
     switch(this.props.displayState){
-      case 'authorize':
-        return <Authorize/>
-      case 'configure':
-        return <Controls/>
-      case 'run':
-        return <ImageSlider/>
-      case 'loading':
-        return <div className={'loading'}>{'loading'}</div>;
+
+      case DisplayStates.AUTHORIZE:
+        return <Authorize onClick={Actions.login}/>
+
+      case DisplayStates.CONFIGURE:
+        return <Controls {...this.props} selectBoard={Actions.selectBoard} selectInterval={Actions.selectInterval} start={Actions.start}/>
+
+      case DisplayStates.RUN:
+        return <ImageSlider {...this.props} nextImage={Actions.nextImage} />
+
+      case DisplayStates.MESSAGE:
+        return <div className={'message'}>{this.props.message}</div>
+
       default:
         return false
     }
-    // return (
-    //   <div>
-    //     <Authorize displayState={this.props.displayState}/>
-    //     <Controls displayState={this.props.displayState}/>
-    //     <ImageSlider displayState={this.props.displayState}/>
-    //   </div>
-    // )
   }
-}
-
-App.propTypes = {
-  dispatch: PropTypes.func, // .isRequired yields a warning because decorators aren't yet fully supported
-  displayState: PropTypes.string
 }

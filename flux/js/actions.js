@@ -6,21 +6,38 @@ export default {
 
   checkSession(){
     let session = PinterestAPI.checkSession()
+
     AppDispatcher.dispatch({
       type: ActionTypes.CHECK_SESSION,
       payload: {session}
     })
+
     if(session){
       PinterestAPI.getBoards()
+      .then(boards => {
+        AppDispatcher.dispatch({
+          type: ActionTypes.GET_BOARDS,
+          payload: {boards}
+        })
+      })
     }
   },
+
 
   login(){
     AppDispatcher.dispatch({
       type: ActionTypes.LOGIN
     })
+
     PinterestAPI.login()
+    .then(boards => {
+      AppDispatcher.dispatch({
+        type: ActionTypes.GET_BOARDS,
+        payload: {boards}
+      })
+    })
   },
+
 
   selectBoard(e){
     let boardId = e.target.options[e.target.selectedIndex].value
@@ -29,6 +46,7 @@ export default {
       payload: {boardId}
     })
   },
+
 
   selectInterval(e){
     AppDispatcher.dispatch({
@@ -39,30 +57,24 @@ export default {
     })
   },
 
+
   start(boardId){
     AppDispatcher.dispatch({
       type: ActionTypes.START,
     })
     PinterestAPI.getPins(boardId)
+    .then(data => {
+      AppDispatcher.dispatch({
+        type: ActionTypes.GET_PINS,
+        payload: data
+      })
+    })
   },
+
 
   nextImage(){
     AppDispatcher.dispatch({
       type: ActionTypes.NEXT_IMAGE
-    })
-  },
-
-  getBoards(boards){
-    AppDispatcher.dispatch({
-      type: ActionTypes.GET_BOARDS,
-      payload: {boards}
-    })
-  },
-
-  getPins(data){
-    AppDispatcher.dispatch({
-      type: ActionTypes.GET_PINS,
-      payload: data
     })
   },
 }

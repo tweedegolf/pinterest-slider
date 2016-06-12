@@ -1,116 +1,86 @@
-import * as actions from './constants'
-import pdk from './pdk_wrapper'
+import * as PinterestAPI from './pinterest/api'
+import * as ActionTypes from './constants/action_types'
 
+let AppDispatcher = {}
 
-function _receiveBoards(json){
-  let boards = []
+export default {
 
-  json.map(function(b){
-    boards.push(b)
-  })
+  checkSession(){
 
-  return {
-    type: actions.RECEIVE_BOARDS,
-    displayState: 'configure',
-    boards
-  }
-}
+    return function(dispatch){
+      let session = PinterestAPI.checkSession()
 
-function _receivePins(json){
-  let pins = []
-  let images = []
-
-  json.map(function(p){
-    pins.push(p)
-    images.push(p.image.original)
-  })
-
-  return {
-    type: actions.RECEIVE_PINS,
-    displayState: 'run',
-    pins,
-    images,
-    numImages: images.length
-  }
-}
-
-export function checkSession(){
-  let accessToken = pdk.accessToken
-  if(accessToken !== ''){
-    return dispatch => {
       dispatch({
-        type: actions.GET_BOARDS,
-        displayState: 'loading'
+        type: ActionTypes.CHECK_SESSION,
+        payload: {session}
       })
-      return pdk.getBoards()
-        .then(e => dispatch(_receiveBoards(e)))
-    }
-  }
 
-  return {
-    type: actions.CHECK_SESSION,
-    displayState: 'authorize'
-  }
-}
-
-export function login(){
-  return dispatch => {
-    dispatch({
-      type: actions.LOGIN,
-      displayState: 'loading'
-    })
-    return pdk.login()
-      .then(() => {
-        dispatch({
-          type: actions.LOGGED_IN,
-          displayState: 'configure'
+      if(session){
+        return PinterestAPI.getBoards()
+        .then(boards => {
+          dispatch({
+            type: ActionTypes.GET_BOARDS,
+            payload: {boards}
+          })
         })
-        pdk.getBoards()
-          .then((e) => dispatch(_receiveBoards(e)))
-      })
-  }
-}
+      }
 
-export function getPins(boardId) {
-  return dispatch => {
-    dispatch({
-      type: actions.GET_PINS,
-      displayState: 'loading'
-    })
-    return pdk.getPins(boardId)
-      .then(e => dispatch(_receivePins(e)))
-  }
-}
-
-
-export function nextImage(oldIndex){
-  return (dispatch, getState) => {
-    let index = oldIndex + 1
-    let max = getState().data.numImages
-    if(index === max){
-      index = 0
+      return null
     }
-    dispatch({
-      type: actions.NEXT_IMAGE,
-      index
-    })
-  }
-}
+  },
 
-export function selectInterval(interval){
-  return (dispatch) => {
-    dispatch({
-      type: actions.SELECT_INTERVAL,
-      interval
-    })
-  }
-}
 
-export function selectBoard(board){
-  return (dispatch) => {
-    dispatch({
-      type: actions.SELECT_BOARD,
-      board
+  login(){
+    AppDispatcher.dispatch({
+      type: ActionTypes.LOGIN
     })
-  }
+
+    PinterestAPI.login()
+    .then(boards => {
+      AppDispatcher.dispatch({
+        type: ActionTypes.GET_BOARDS,
+        payload: {boards}
+      })
+    })
+  },
+
+
+  selectBoard(e){
+    let boardId = e.target.options[e.target.selectedIndex].value
+    AppDispatcher.dispatch({
+      type: ActionTypes.SELECT_BOARD,
+      payload: {boardId}
+    })
+  },
+
+
+  selectInterval(e){
+    AppDispatcher.dispatch({
+      type: ActionTypes.SELECT_INTERVAL,
+      payload: {
+        interval: e.target.valueAsNumber
+      }
+    })
+  },
+
+
+  start(boardId){
+    AppDispatcher.dispatch({
+      type: ActionTypes.START,
+    })
+    PinterestAPI.getPins(boardId)
+    .then(data => {
+      AppDispatcher.dispatch({
+        type: ActionTypes.GET_PINS,
+        payload: data
+      })
+    })
+  },
+
+
+  nextImage(){
+    AppDispatcher.dispatch({
+      type: ActionTypes.NEXT_IMAGE
+    })
+  },
 }

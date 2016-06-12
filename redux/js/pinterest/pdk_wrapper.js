@@ -11,7 +11,7 @@ function getSettings(){
     method: 'GET',
     cache: 'default',
     headers: {
-      'Authorization': `BEARER ${accessToken}`
+      Authorization: `BEARER ${accessToken}`
     }
   }
 }
