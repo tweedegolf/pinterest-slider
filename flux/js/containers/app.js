@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Container} from 'flux/utils'
 import Actions from '../actions'
 import Authorize from '../components/authorize'
 import Controls from '../components/controls'
@@ -8,29 +9,26 @@ import * as DisplayStates from '../constants/display_states'
 
 // only component with state
 
-export default class App extends Component{
+class App extends Component{
 
   static displayName = 'App'
 
+  static getStores() {
+    return [Store];
+  }
+
+  static calculateState(prevState){
+    //console.log(prevState)
+    let state = Store.getState()
+    return {...state}
+  }
+
   constructor(){
     super()
-    this.state = Store.getState()
-    this._onChangeListener = this._onChange.bind(this)
   }
 
   componentDidMount() {
-    this._storeListener = Store.addListener(this._onChangeListener)
     Actions.checkSession()
-  }
-
-  componentWillUnmount() {
-    this._storeListener.remove()
-  }
-
-  _onChange(){
-    let state = Store.getState()
-    //console.log(state)
-    this.setState(state)
   }
 
   render(){
@@ -53,3 +51,5 @@ export default class App extends Component{
     }
   }
 }
+
+export default Container.create(App)
