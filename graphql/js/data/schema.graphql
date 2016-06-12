@@ -1,0 +1,23 @@
+schema {
+  query: Query
+}
+
+type Board {
+  id: String
+  name: [Board]
+}
+
+type Query {
+  state: State
+  session: Session
+}
+
+type Session {
+  loggedin: Boolean
+  boards: [Board]
+}
+
+type State {
+  displayState: String
+  message: String
+}
