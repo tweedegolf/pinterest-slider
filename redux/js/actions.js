@@ -1,8 +1,6 @@
 import * as PinterestAPI from './pinterest/api'
 import * as ActionTypes from './constants/action_types'
 
-let AppDispatcher = {}
-
 export default {
 
   checkSession(){

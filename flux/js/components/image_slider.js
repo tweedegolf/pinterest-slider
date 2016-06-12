@@ -11,7 +11,7 @@ export default class ImageSlider extends Component{
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      this.props.nextImage(this.props.index)
+      this.props.nextImage()
     }, this.props.interval)
   }
 

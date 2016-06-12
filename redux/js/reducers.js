@@ -21,13 +21,19 @@ function rootReducer(state = initialState, action){
 
   switch (action.type) {
     case actions.CHECK_SESSION:
-      return {...state, displayState: DisplayStates.MESSAGE, message: 'check session'}
+      if(action.payload.session === true){
+        return {...state, displayState: DisplayStates.MESSAGE, message: 'check session'}
+      }
+      return {...state, displayState: DisplayStates.AUTHORIZE}
+
+    case actions.LOGIN:
+      return {...state, displayState: DisplayStates.MESSAGE, message: 'logging in'}
 
     case actions.GET_BOARDS:
       return {...state, displayState: DisplayStates.CONFIGURE, boards: action.payload.boards}
 
     case actions.SELECT_INTERVAL:
-      return {...state, interval: action.interval}
+      return {...state, interval: action.payload.interval}
 
     case actions.SELECT_BOARD:
       return {...state, selectedBoard: action.payload.boardId}
@@ -41,7 +47,7 @@ function rootReducer(state = initialState, action){
       if(index === maxIndex){
         index = 0
       }
-      return {...state, index: index}
+      return {...state, index}
 
     default:
       return state

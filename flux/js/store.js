@@ -52,9 +52,8 @@ class Store extends ReduceStore {
 
       // actions originating from setInterval
       case ActionTypes.NEXT_IMAGE:
-        let index = state.index
+        let index = state.index + 1
         let numImages = state.images.length
-        index++
         if(index === numImages){
           index = 0
         }
