@@ -4,20 +4,22 @@ schema {
 
 type Board {
   id: String
-  name: [Board]
+  url: String
+  name: String
+}
+
+type Image {
+  id: String
+  url: String
+  pinUrl: String
 }
 
 type Query {
-  state: State
   session: Session
 }
 
 type Session {
   loggedin: Boolean
   boards: [Board]
-}
-
-type State {
-  displayState: String
-  message: String
+  images(boardId: String): [Image]
 }

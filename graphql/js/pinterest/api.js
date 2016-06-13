@@ -29,10 +29,7 @@ export function getPins(boardId) {
       images.push(p.image.original)
     })
 
-    return {
-      images,
-      numImages: json.length
-    }
+    return images
   })
 }
 

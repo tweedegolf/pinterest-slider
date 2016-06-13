@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <RootContainer
       Component={App}
       route={new AppRoute()}
+      renderLoading={() => (<div className={'message'}>{'checking session'}</div>)}
     />,
     document.getElementById('app')
   )
