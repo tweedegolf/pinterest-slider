@@ -19,7 +19,7 @@ type Query {
 }
 
 type Session {
-  loggedin: Boolean
+  authorized: Boolean
   boards: [Board]
   images(boardId: String): [Image]
 }

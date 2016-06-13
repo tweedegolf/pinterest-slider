@@ -33,10 +33,10 @@
         {
           "kind": "OBJECT",
           "name": "Session",
-          "description": "Current state of the application",
+          "description": "A session using the Pinterest API",
           "fields": [
             {
-              "name": "loggedin",
+              "name": "authorized",
               "description": null,
               "args": [],
               "type": {
@@ -109,7 +109,7 @@
         {
           "kind": "OBJECT",
           "name": "Board",
-          "description": "Current state of the application",
+          "description": "A Pinterest board",
           "fields": [
             {
               "name": "id",
@@ -166,7 +166,7 @@
         {
           "kind": "OBJECT",
           "name": "Image",
-          "description": "Current state of the application",
+          "description": "An image on a pin in a Pinterest board",
           "fields": [
             {
               "name": "id",

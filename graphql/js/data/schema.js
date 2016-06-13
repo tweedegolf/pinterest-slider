@@ -1,50 +1,35 @@
 import {
-  graphql,
   GraphQLSchema,
   GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLInterfaceType,
   GraphQLString,
-  GraphQLInt,
   GraphQLList,
-  GraphQLNonNull,
   GraphQLBoolean,
 } from 'graphql'
 
-import {
-  connectionArgs,
-  connectionDefinitions,
-  connectionFromArray,
-  fromGlobalId,
-  globalIdField,
-  mutationWithClientMutationId,
-  nodeDefinitions,
-} from 'graphql-relay';
-
-import * as DisplayStates from '../constants/display_states'
 import * as PinterestAPI from '../pinterest/api'
 
 
 let initialState = {
+  authorized: false,
   boards: [],
   images: [],
-  loggedin: false,
 }
 
 
 const checkSession = function(){
-  let loggedin = PinterestAPI.checkSession()
-  if(loggedin === true){
+  let authorized = PinterestAPI.checkSession()
+  if(authorized === true){
     return Promise.resolve()
     .then(PinterestAPI.getBoards)
     .then(boards => {
-      return {...initialState, loggedin, boards}
+      return {...initialState, authorized, boards}
     })
   }
   return Promise.resolve()
   .then(PinterestAPI.login)
   .then(boards => {
-    return {...initialState, loggedin, boards}
+    authorized = true
+    return {...initialState, authorized, boards}
   })
 }
 
@@ -62,7 +47,7 @@ const getImages = function(boardId){
 
 const boardType = new GraphQLObjectType({
   name: 'Board',
-  description: 'Current state of the application',
+  description: 'A Pinterest board',
   fields: () => ({
     id: {
       type: GraphQLString
@@ -79,7 +64,7 @@ const boardType = new GraphQLObjectType({
 
 const imageType = new GraphQLObjectType({
   name: 'Image',
-  description: 'Current state of the application',
+  description: 'An image on a pin in a Pinterest board',
   fields: () => ({
     id: {
       type: GraphQLString
@@ -96,10 +81,10 @@ const imageType = new GraphQLObjectType({
 
 const sessionType = new GraphQLObjectType({
   name: 'Session',
-  description: 'Current state of the application',
+  description: 'A session using the Pinterest API',
   fields: () => ({
-    loggedin: {
-      type: GraphQLBoolean,
+    authorized: {
+      type: GraphQLBoolean
     },
     boards: {
       type: new GraphQLList(boardType),
