@@ -94,8 +94,3 @@ But in applications that require a lot of data fetching it is not a question of 
 [getting data from an API](https://medium.com/@tribou/flux-getting-data-from-an-api-b73b6478c015#.164yw4ysk)
 
 
-
-
-
-
-
