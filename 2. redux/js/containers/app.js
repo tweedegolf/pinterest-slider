@@ -23,7 +23,22 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = function(dispatch){
   return {
-    dispatch
+    dispatch,
+    login(args){
+      dispatch(Actions.login(...args))
+    },
+    selectBoard(e){
+      dispatch(Actions.selectBoard(e))
+    },
+    selectInterval(e){
+      dispatch(Actions.selectInterval(e))
+    },
+    start(boardId){
+      dispatch(Actions.start(boardId))
+    },
+    nextImage(){
+      dispatch(Actions.nextImage())
+    }
   }
 }
 
@@ -35,21 +50,6 @@ export default class App extends Component{
   constructor(){
     super()
 
-    this._login = (args) => {
-      this.props.dispatch(Actions.login(...args))
-    }
-    this._selectBoard = (e) => {
-      this.props.dispatch(Actions.selectBoard(e))
-    }
-    this._selectInterval = (e) => {
-      this.props.dispatch(Actions.selectInterval(e))
-    }
-    this._start = (boardId) => {
-      this.props.dispatch(Actions.start(boardId))
-    }
-    this._nextImage = () => {
-      this.props.dispatch(Actions.nextImage())
-    }
   }
 
   componentDidMount() {
@@ -60,13 +60,13 @@ export default class App extends Component{
     switch(this.props.displayState){
 
       case DisplayStates.AUTHORIZE:
-        return <Authorize onClick={this._login}/>
+        return <Authorize onClick={this.props.login}/>
 
       case DisplayStates.CONFIGURE:
-        return <Controls {...this.props} selectBoard={this._selectBoard} selectInterval={this._selectInterval} start={this._start}/>
+        return <Controls {...this.props}/>
 
       case DisplayStates.RUN:
-        return <ImageSlider {...this.props} nextImage={this._nextImage} />
+        return <ImageSlider {...this.props} />
 
       case DisplayStates.MESSAGE:
         return <div className={'message'}>{this.props.message}</div>
@@ -80,5 +80,6 @@ export default class App extends Component{
 App.propTypes = {
   dispatch: PropTypes.func,
   displayState: PropTypes.string,
+  login: PropTypes.func,
   message: PropTypes.string,
 }

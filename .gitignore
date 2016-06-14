@@ -5,6 +5,4 @@ build
 *.key
 *.key.secure
 *.lock
-login.html
-npm.log
 npm-debug.log

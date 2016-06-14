@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './containers/app'
 import {Provider} from 'react-redux'
-import getStore from './reducers'
+import getStore from './store'
 
 
 document.addEventListener('DOMContentLoaded', function(){
