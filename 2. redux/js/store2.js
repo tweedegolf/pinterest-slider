@@ -1,4 +1,5 @@
 import {applyMiddleware, createStore} from 'redux'
+import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import * as ActionTypes from './constants/action_types'
 import * as DisplayStates from './constants/display_states'
@@ -70,6 +71,7 @@ export default function getStore() {
       rootReducer,
       initialState,
       applyMiddleware(
+        thunkMiddleware,
         createLogger()
       )
     )

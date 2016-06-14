@@ -11,15 +11,3 @@ export default class AppRoute extends Relay.Route {
 
   static routeName = 'AppRoute';
 }
-    // boards: () => Relay.QL`
-    //   query {
-    //     boards
-    //   }
-    // `
-
-
-    // state: () => Relay.QL`
-    //   query {
-    //     state,
-    //   }
-    // `,

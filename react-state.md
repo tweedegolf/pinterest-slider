@@ -56,15 +56,13 @@ In the versions that use Flux and Redux both application state and data state ar
 
 If you compare the code of the App container you will see that in all versions the properties and actions needed by the components are passed in from the container, however the way this is done differs.
 
-The code of the Flux and the Redux versions look very much the same. In the Flux version the App container is wrapped in a flux Container and as a result it gets automatically notified of state changes. In the Redux version we need to add that functionality by using a decorator pattern. I made 2 versions; one that only maps the state to props (`app.js`) and one that also maps the dispatch function to props (`app2.js`).
+The code of the Flux and the Redux versions look very much the same. In the Flux version the App container is wrapped in a flux Container and as a result it gets automatically notified of state changes. In the Redux version we need to add that functionality by using a decorator pattern.
 
-Both the Flux and the Redux version use separate actions to alter the state. If you compare the `actions.js` file of both versions you see that they basically only differ in the way they dispatch the actions.
+Both the Flux and the Redux version dispatch actions to alter the state in a store. If you compare the `actions.js` and the `store.js` files of both versions you see that they are  identical apart from the boilerplate code.
 
-Note that the Redux version dispatches a promise whenever data needs to be fetched from the server. Out of the box Redux doesn't support actions to be functions, we need Thunk middleware to make this possible.
+Note that I choose not to use an action creator as described in the Redux documentation; in `actions.js` the actions are both created and dispatched. This has 2 benefits: the code looks more similar to the Flux version and we don't need Thunk middleware for asynchronous actions. Asynchronous actions occur when data needs to be fetched from Pinterest.
 
-In the Redux version you will find a files `action2.js` as well; this version should be used together with `app2.js`. This second version is actually an action creates because it only creates actions and doesn't dispatch them. In the Redux documentation this is the recommended way, but I have added the first version to make the code look more like the Flux version where actions are both created and dispatched in `actions.js`.
-
-The files `store.js` where the state is kept are identical apart from the boilerplate code to setup the store.
+In the file `actions2.js` you see a regular Redux action creator. If you want to use this version you need to change the App container and the store as well, as you see in respectively `app2.js` and `store2.js`. Differences are that in `app2.js` the App container is also decorated with a `mapDispatchToProps` function and in `store2.js` the Thunk middleware is added.
 
 The Relay/GraphQL version is the odd one out here. Because the application state is maintained in the App container itself, this version doesn't need actions and a dispatcher, nor a separate store file. By wrapping the App container in a Relay container the server data gets automatically fetched and added to the props of the App container.
 
@@ -77,12 +75,24 @@ During coding and refactoring of the 3 versions the leading idea was to make the
 
 And I have even cheated a bit as well; as you might have noticed the Relay/GraphQL version skips the Authorize component and the progress messages. This is done because I didn't want to alter the components Configure and ImageSlider; to use Relay/GraphQL properly I should have wrapped them in their own Relay containers so they fetch their own data as soon as the display state commands them to render. (@Erik: ik wil dit voorbeeldje eigenlijk ook nog even toevoegen)
 
-In applications that require a lot of data fetching it is not a question of Redux/Flux *or* Relay/GraphQL; application state management is best done with Redux, Flux or similar, whereas Relay/GraphQL shines in data state management.
+For this simple Pinterest application we didn't need Relay/GraphQL. I wrote a wrapper around the Pinterest REST API and another small API around that wrapper which makes it very easy to use with Flux and Redux.
 
-In fact for this simple Pinterest application we don't need Relay/GraphQL. I wrote a wrapper around the Pinterest REST API and another small API around that wrapper which makes it very easy to use with Flux and Redux. Note that Redux doesn't support actions that return promises out of the box.
+But in applications that require a lot of data fetching it is not a question of using Redux/Flux *or* Relay/GraphQL; application state management is best done with Redux, Flux or similar, whereas Relay/GraphQL shines in data state management.
 
 
-It is not either Redux/Flux or Relay, it is and and -> a little note about the pinterest wrapper which makes it not very necessary to use Relay/GraphQL
+
+###Links for further reading
+
+[different Flux implementations](http://jamesknelson.com/which-flux-implementation-should-i-use-with-react/)
+
+[smart and dumb components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.5zv6s0dag)
+
+[smart and dumb components](http://jaketrent.com/post/smart-dumb-components-react/)
+
+[async requests](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/)
+
+[getting data from an API](https://medium.com/@tribou/flux-getting-data-from-an-api-b73b6478c015#.164yw4ysk)
+
 
 
 
