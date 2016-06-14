@@ -62,6 +62,7 @@ export default {
     AppDispatcher.dispatch({
       type: ActionTypes.START,
     })
+
     PinterestAPI.getPins(boardId)
     .then(data => {
       AppDispatcher.dispatch({

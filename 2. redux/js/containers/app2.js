@@ -21,26 +21,47 @@ const mapStateToProps = (state) => {
   }
 }
 
-@connect(mapStateToProps)
+const mapDispatchToProps = function(dispatch){
+  return {
+    dispatch,
+    login(){
+      dispatch(Actions.login())
+    },
+    selectBoard(e){
+      dispatch(Actions.selectBoard(e))
+    },
+    selectInterval(e){
+      dispatch(Actions.selectInterval(e))
+    },
+    start(boardId){
+      dispatch(Actions.start(boardId))
+    },
+    nextImage(){
+      dispatch(Actions.nextImage())
+    }
+  }
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class App extends Component{
 
   static displayName = 'App'
 
   componentDidMount() {
-    Actions.checkSession()
+    this.props.dispatch(Actions.checkSession())
   }
 
   render(){
     switch(this.props.displayState){
 
       case DisplayStates.AUTHORIZE:
-        return <Authorize onClick={Actions.login}/>
+        return <Authorize onClick={this.props.login}/>
 
       case DisplayStates.CONFIGURE:
-        return <Controls {...this.props} selectBoard={Actions.selectBoard} selectInterval={Actions.selectInterval} start={Actions.start}/>
+        return <Controls {...this.props}/>
 
       case DisplayStates.RUN:
-        return <ImageSlider {...this.props} nextImage={Actions.nextImage}/>
+        return <ImageSlider {...this.props}/>
 
       case DisplayStates.MESSAGE:
         return <div className={'message'}>{this.props.message}</div>

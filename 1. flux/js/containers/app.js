@@ -23,10 +23,6 @@ class App extends Component{
     return {...state}
   }
 
-  constructor(){
-    super()
-  }
-
   componentDidMount() {
     Actions.checkSession()
   }

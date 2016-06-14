@@ -8,8 +8,8 @@ class Store extends ReduceStore {
 
   getInitialState(){
     return {
-      displayState: DisplayStates.Authorize,
-      message: '...',
+      displayState: DisplayStates.AUTHORIZE,
+      message: 'checking session',
       boards: [],
       images: [],
       index: 0,
@@ -19,35 +19,28 @@ class Store extends ReduceStore {
   }
 
   reduce(state, action) {
-    //console.log('action:', action, state)
 
     switch(action.type) {
 
       case ActionTypes.CHECK_SESSION:
         if(action.payload.session === true){
-          state = {...state, displayState: DisplayStates.MESSAGE, message: 'checking session'}
-        }else{
-          state = {...state, displayState: DisplayStates.AUTHORIZE}
+          return {...state, displayState: DisplayStates.MESSAGE, message: 'checking session'}
         }
-        return state
+        return {...state, displayState: DisplayStates.AUTHORIZE}
 
       case ActionTypes.LOGIN:
-        state = {...state, displayState: DisplayStates.MESSAGE, message: 'logging in'}
-        return state
+        return {...state, displayState: DisplayStates.MESSAGE, message: 'logging in'}
 
 
       // actions originating from user interaction
       case ActionTypes.SELECT_BOARD:
-        state = {...state, selectedBoard: action.payload.boardId}
-        return state
+        return {...state, selectedBoard: action.payload.boardId}
 
       case ActionTypes.SELECT_INTERVAL:
-        state = {...state, interval: action.payload.interval}
-        return state
+        return {...state, interval: action.payload.interval}
 
       case ActionTypes.START:
-        state = {...state, displayState: DisplayStates.MESSAGE, message: 'loading images'}
-        return state
+        return {...state, displayState: DisplayStates.MESSAGE, message: 'loading images'}
 
 
       // actions originating from setInterval
@@ -57,18 +50,15 @@ class Store extends ReduceStore {
         if(index === numImages){
           index = 0
         }
-        state = {...state, index}
-        return state
+        return {...state, index}
 
 
       // actions originating from Pinterest API
       case ActionTypes.GET_BOARDS:
-        state = {...state, boards: action.payload.boards, displayState: DisplayStates.CONFIGURE}
-        return state
+        return {...state, boards: action.payload.boards, displayState: DisplayStates.CONFIGURE}
 
       case ActionTypes.GET_PINS:
-        state = {...state, images: action.payload.images, displayState: DisplayStates.RUN}
-        return state
+        return {...state, images: action.payload.images, displayState: DisplayStates.RUN}
 
       default:
         return state
