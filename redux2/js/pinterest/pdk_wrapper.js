@@ -42,9 +42,7 @@ function login(){
       window.addEventListener('message', function(e){
         if(e.data.access_token && e.data.state === state){
           accessToken = e.data.access_token
-          if(typeof document !== 'undefined'){
-            document.cookie = `ps_${appKey}="accessToken=${accessToken}&scope=${scope}";path=/`
-          }
+          document.cookie = `ps_${appKey}="accessToken=${accessToken}&scope=${scope}";path=/`
           resolve()
         }else{
           reject('error')
@@ -67,11 +65,9 @@ function getPins(boardId) {
 }
 
 function init(){
-  if(typeof document !== 'undefined'){
-    let cookie = document.cookie;
-    if(cookie.indexOf(`ps_${appKey}`) !== -1){
-      accessToken = cookie.substring(cookie.indexOf('accessToken=') + 12, cookie.indexOf('&scope')); // quick and dirty
-    }
+  let cookie = document.cookie;
+  if(cookie.indexOf(`ps_${appKey}`) !== -1){
+    accessToken = cookie.substring(cookie.indexOf('accessToken=') + 12, cookie.indexOf('&scope')); // quick and dirty
   }
   return {
     accessToken,

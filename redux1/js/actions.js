@@ -63,7 +63,7 @@ export default {
 
 
   start(boardId){
-    return function(dispatch){
+    return dispatch => {
       dispatch({
         type: ActionTypes.START,
       })
@@ -79,10 +79,8 @@ export default {
 
 
   nextImage(){
-    return function(dispatch){
-      dispatch({
-        type: ActionTypes.NEXT_IMAGE
-      })
+    return {
+      type: ActionTypes.NEXT_IMAGE
     }
   },
 }
